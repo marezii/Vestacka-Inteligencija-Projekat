@@ -16,6 +16,8 @@
   )
 )
 
+;This is just a test on line 19.
+
 (defun stampaj (stanje)
 (format t "~%~a ~a ~a~%" (nth 0 stanje)
 (nth 1 stanje) (nth 2 stanje))
