@@ -1,29 +1,45 @@
 (defstruct byte
     matrix
+    listField
     matSize
+    placeInStack
 )
 
+(setq byte-matSize (read))
 (defun byteGame ()
-    (setq n (read))
-    (setq byte-matSize n)
-    (if (eq (mod byte-matSize '2) '0) (draw byte-matSize) (byteGame)
+    (cond 
+        ((or (eq byte-matSize '8)(eq byte-matSize '10)) (writeBordNumbers byte-matSize)) 
+        ((setq byte-matSize (read)))
     )
 )
 
-(defun draw (matSize)
-  (cond 
-      ((>= matSize 0) (draw (- matSize 1)) (format t "~a            " matSize))
-  )
+(defun writeBordNumbers (matSize)
+    (cond 
+        ((>= matSize 0) (writeBordNumbers (- matSize 1)) (format t "    ~a  " matSize))
+        (t (printBord letterList counter))
+    )
 )
 
-;This is just a test on line 19.
+(defun printStack ()
+(format t "~%   ~%")
+(format t "   ~%")
+(format t "   ~%" )
+(format t "~a~%" "kraj")
+)
 
-(defun stampaj (stanje)
-(format t "~%~a ~a ~a~%" (nth 0 stanje)
-(nth 1 stanje) (nth 2 stanje))
-(format t "~a ~a ~a~%" (nth 3 stanje)
-(nth 4 stanje) (nth 5 stanje))
-(format t "~a ~a ~a~%" (nth 6 stanje)
-(nth 7 stanje) (nth 8 stanje)))
+(setq letterList '(A B C D E F G H I J))
 
-(byteGame)
+(setq bitColor nil)
+(setq  counter 0)
+(setq  ls '())
+(defun printBord (letterList counter)
+        (if (eq counter (* (* 3 byte-matSize) (* 3 byte-matSize))) '())
+        (if (eq (mod counter 3) 1) (format t " ~a " (car letterList)) (format t "   "))
+        (if (eq (mod counter 24) '0) (format t "~%"))
+        (if (eq nil bitColor) (format t "---") (format t "   "))
+        (printBord (cdr letterList) (+ 1 counter))
+    
+)
+
+;(trace printBord)
+(printStack)
