@@ -5,41 +5,63 @@
     placeInStack
 )
 
+(setq letterList '(A B C D E F G H I J))
+(setq bitColor nil)
 (setq byte-matSize (read))
+(setq  counter (* byte-matSize 3))
+
+
 (defun byteGame ()
     (cond 
-        ((or (eq byte-matSize '8)(eq byte-matSize '10)) (writeBordNumbers byte-matSize)) 
-        ((setq byte-matSize (read)))
+        ((or (eq byte-matSize '8)(eq byte-matSize '10)) (writeBordNumbers byte-matSize) (format t "~%")(printBord letterList counter)) 
+        (:else (setq byte-matSize (read)))
+        
+
     )
+    
 )
 
 (defun writeBordNumbers (matSize)
     (cond 
-        ((>= matSize 0) (writeBordNumbers (- matSize 1)) (format t "    ~a  " matSize))
-        (t (printBord letterList counter))
+        ((> matSize 0) (writeBordNumbers (- matSize 1)) (format t "    ~a" matSize))
+        
     )
 )
 
-(defun printStack ()
-(format t "~%   ~%")
-(format t "   ~%")
-(format t "   ~%" )
-(format t "~a~%" "kraj")
-)
-
-(setq letterList '(A B C D E F G H I J))
-
-(setq bitColor nil)
-(setq  counter 0)
-(setq  ls '())
 (defun printBord (letterList counter)
-        (if (eq counter (* (* 3 byte-matSize) (* 3 byte-matSize))) '())
-        (if (eq (mod counter 3) 1) (format t " ~a " (car letterList)) (format t "   "))
-        (if (eq (mod counter 24) '0) (format t "~%"))
-        (if (eq nil bitColor) (format t "---") (format t "   "))
-        (printBord (cdr letterList) (+ 1 counter))
-    
+    (dotimes (i counter)
+
+        (if (and (eq (mod i 3) 0) (> i 0))
+                (setq bitColor (not bitColor))  
+
+        )
+        (cond 
+            ((eq (mod i 3) 1)(format t "~%~a " (car letterList)) (setq letterList (cdr letterList)))
+            ((format t "~%  "))
+        )
+            
+      
+        (dotimes (j byte-matSize)
+            (if (eq bitColor nil)
+                (printBlackFirst)
+                (printWhiteFirst)
+            )
+            
+        )
+            
+    )
 )
 
-;(trace printBord)
-(printStack)
+(defun printBlackFirst ()
+    (format t "- - -")
+    (setq bitColor (not bitColor))
+)
+
+(defun printWhiteFirst ()
+    (format t "     ")
+    (setq bitColor (not bitColor))
+)
+
+;; (trace printBord)
+(byteGame)
+
