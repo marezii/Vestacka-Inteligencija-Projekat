@@ -20,7 +20,7 @@
     )
     
 )
-
+;Marko
 (defun writeBordNumbers (matSize)
     (cond 
         ((> matSize 0) (writeBordNumbers (- matSize 1)) (format t "    ~a" matSize))
