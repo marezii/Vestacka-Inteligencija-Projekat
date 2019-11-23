@@ -1,8 +1,7 @@
 (defstruct byte
-    matrix
-    listField
+    matrix ; (- X X X O O O O)
     matSize
-    placeInStack
+    placeInStack ;(A 1)
 )
 
 (setq letterList '(A B C D E F G H I J))
@@ -20,7 +19,7 @@
     )
     
 )
-;Marko
+
 (defun writeBordNumbers (matSize)
     (cond 
         ((> matSize 0) (writeBordNumbers (- matSize 1)) (format t "    ~a" matSize))
@@ -43,7 +42,7 @@
       
         (dotimes (j byte-matSize)
             (if (eq bitColor nil)
-                (printBlackFirst)
+                (printBlackFirst state (car letterList))
                 (printWhiteFirst)
             )
             
@@ -62,6 +61,8 @@
     (setq bitColor (not bitColor))
 )
 
+;; (setq initialState ((A 1)() (A 3)() (A 5)() (A 7) () ((B 2)(-----)))
+
 ;; (trace printBord)
-(byteGame)
+(write (car (-)))
 
