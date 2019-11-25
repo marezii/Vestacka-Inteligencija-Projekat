@@ -180,7 +180,7 @@
                      (4 (- - - - - - - - -))
                      (6 (- - - - - - - - -))
                      (8 (- - - - - - - - -))
-                     (8 (- - - - - - - - -))))
+                     (10 (- - - - - - - - -))))
                     ))
 
  (setq computerState10'(((A 1) 
@@ -251,7 +251,7 @@
                      (4 (- - - - - - - - -))
                      (6 (- - - - - - - - -))
                      (8 (- - - - - - - - -))
-                     (8 (- - - - - - - - -))))
+                     (10 (- - - - - - - - -))))
                     ))
 
 (defun byteGame ()
@@ -345,7 +345,7 @@
 ;;         (t ()) 
 ;;     )
 ;; )
-(trace drawRow)
+;; (trace drawRow)
 (byteGame)
  
 ;;  (print  (append (list (list '1 (cdar (cdr (assoc '1 (cadar byte-state)))))) (cdadar byte-state)))
