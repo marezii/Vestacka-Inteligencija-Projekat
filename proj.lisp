@@ -20,7 +20,7 @@
 ))
 
 (setq humanState8'( ((A 1) 
-                    ((1 (- - - - - - - - -)) 
+                    ((1 (X - - O - - X - -)) 
                      (3 (- - - - - - - - -))
                      (5 (- - - - - - - - -))
                      (7 (- - - - - - - - -))))
@@ -298,7 +298,7 @@
             (drawRow 
                 (* 3 byte-matSize) 
                 (cadr (assoc (caar letterList) letterList)) 
-                testCounter (cadar initialState)) 
+                testCounter (cadar initialState) '3 '2) 
             (printBord 
                 letterList (- counter 1) initialState))
         ((eq (mod counter 3) 1)
@@ -306,22 +306,47 @@
             (drawRow 
                 (* 3 byte-matSize) 
                 (cadr (assoc (caar letterList) letterList))
-                testCounter (cadar initialState)) 
+                testCounter (cadar initialState) '6 '3) 
             (printBord (cdr letterList) (- counter 1) (cdr initialState)))
         (t (format t "~%  ")     
             (drawRow 
                 (* 3 byte-matSize) 
                 (cadr (assoc (caar letterList) letterList)) 
-                testCounter (cadar initialState)) 
+                testCounter (cadar initialState) '0 '1) 
             (printBord letterList (- counter 1) initialState))
     )
     
 )
 ;;Postoji resenje koje kaze mesto intState koristi globalni byte-state uz malo promena
 ;;ali ga vrati na staro kad zavrsis
-(defun drawRow (cnt letterNo btSize intState &optional (n 3))
+;; (defun drawRow (cnt letterNo btSize intState &optional (n 3))
+;;     (cond 
+;;         ((eq n '0)(setq btSize (+ btSize 1))(setq n 3))
+;;     )
+;;     (cond 
+;;         ((null intState) ())
+;;         ((eq (+ 1 (caar intState)) btSize) (setq intState (cdr intState)))
+;;     )
+;;     (cond 
+;;         ((eq cnt '0) '())
+;;         ;; ((eq (mod (+ letterNo btSize) '2) '0) 
+;;         ;;     (format t "   ") 
+;;         ;;     (drawRow (- cnt 1) letterNo btSize intState (- n 1))) 
+;;         ((eq btSize (car (assoc btSize intState)))  (format t " ~a " (caar (cdr (assoc btSize intState)))) 
+;;             (drawRow (- cnt 1) letterNo btSize (append (list (list btSize (cdar (cdr (assoc btSize intState))))) (cdr intState)) (- n 1)))
+;;             (t  (format t "   ") 
+;;                 (drawRow (- cnt 1) letterNo btSize intState (- n 1))) 
+;;     )
+;; )
+(defun drawRow (cnt letterNo btSize intState &optional n m)
     (cond 
-        ((eq n '0)(setq btSize (+ btSize 1))(setq n 3))
+        ((and (eq n '3)(eq m '1))(setq btSize (+ btSize 1))(setq n 0))
+    )
+    (cond 
+        ((and (eq n '6)(eq m '2))(setq btSize (+ btSize 1))(setq n 3))
+    )
+    (cond 
+        ((and (eq n '9)(eq m '3))(setq btSize (+ btSize 1))(setq n 6 ))
     )
     (cond 
         ((null intState) ())
@@ -332,12 +357,12 @@
         ;; ((eq (mod (+ letterNo btSize) '2) '0) 
         ;;     (format t "   ") 
         ;;     (drawRow (- cnt 1) letterNo btSize intState (- n 1))) 
-        ((eq btSize (car (assoc btSize intState)))  (format t " ~a " (caar (cdr (assoc btSize intState)))) 
-            (drawRow (- cnt 1) letterNo btSize (append (list (list btSize (cdar (cdr (assoc btSize intState))))) (cdr intState)) (- n 1)))
+        ((eq btSize (car (assoc btSize intState)))  (format t " ~a " (nth n (car (cdr (assoc btSize intState))))) ;ove neki nth 
+            (drawRow (- cnt 1) letterNo btSize intState (cdr intState)) (+ n 1) m))
             (t  (format t "   ") 
-                (drawRow (- cnt 1) letterNo btSize intState (- n 1))) 
+                (drawRow (- cnt 1) letterNo btSize intState (+ n 1) m)) 
     )
-)
+
 
 ;; (defun newList (initialState)
 ;;     (cond
@@ -345,9 +370,10 @@
 ;;         (t ()) 
 ;;     )
 ;; )
-;; (trace drawRow)
+ (trace drawRow)
 (byteGame)
- 
+;; (print (nth 0 (cadr (caadar byte-state))))
+;; (print (caar (cdr (assoc '1 byte-state))))
 ;;  (print  (append (list (list '1 (cdar (cdr (assoc '1 (cadar byte-state)))))) (cdadar byte-state)))
-;;  (print  (list '1 (cdar (cdr (assoc '1 (cadar byte-state))))))
+;;   (print  (list '1 (cdar (cdr (assoc '1 (cadar byte-state))))))
 ;;  (print (car (caadar byte-state)))
