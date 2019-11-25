@@ -358,10 +358,19 @@
         ;;     (format t "   ") 
         ;;     (drawRow (- cnt 1) letterNo btSize intState (- n 1))) 
         ((eq btSize (car (assoc btSize intState)))  (format t " ~a " (nth n (car (cdr (assoc btSize intState))))) ;ove neki nth 
-            (drawRow (- cnt 1) letterNo btSize intState (cdr intState)) (+ n 1) m))
-            (t  (format t "   ") 
-                (drawRow (- cnt 1) letterNo btSize intState (+ n 1) m)) 
+            (cond
+                ((and (eq n '3) (eq m '1)) (drawRow (- cnt 1) letterNo btSize intState (cdr intState)) (+ n 1) m)           
+                ((and (eq n '6) (eq m '2)) (drawRow (- cnt 1) letterNo btSize intState (cdr intState)) (+ n 1) m)           
+                ((and (eq n '9) (eq m '3)) (drawRow (- cnt 1) letterNo btSize intState (cdr intState)) (+ n 1) m)           
+                (t (drawRow (- cnt 1) letterNo btSize intState (+ n 1) m))           
+            )      
+            ;; (drawRow (- cnt 1) letterNo btSize intState (cdr intState)) (+ n 1) m))
+           
+        )
+         (t  (format t "   ") 
+            (drawRow (- cnt 1) letterNo btSize intState (+ n 1) m)) 
     )
+)
 
 
 ;; (defun newList (initialState)
@@ -370,7 +379,7 @@
 ;;         (t ()) 
 ;;     )
 ;; )
- (trace drawRow)
+;;  (trace drawRow)
 (byteGame)
 ;; (print (nth 0 (cadr (caadar byte-state))))
 ;; (print (caar (cdr (assoc '1 byte-state))))
