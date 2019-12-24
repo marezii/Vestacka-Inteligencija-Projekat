@@ -15,16 +15,15 @@
 (print "Da li zelite da igrate prvi? 1 za da 0 za ne")
 (setq firstPlayer (read))
 
-(setq state (make-byte
-    :state ()
-))
+(setq byte-state '())
 
 (setq humanState8'( ((A 1) 
-                    ((1 (X - - O - - X - -)) 
+                     ((1 (X - - O - - X - -)) 
                      (3 (- - - - - - - - -))
                      (5 (- - - - - - - - -))
                      (7 (- - - - - - - - -))))
-                    ((B 2) ((2 (- - - - - - - - O))
+                    ((B 2) 
+                     ((2 (- - - - - - - - O))
                      (4 (- - - - - - - - O))
                      (6 (- - - - - - - - O))
                      (8 (- - - - - - - - O))))
@@ -254,6 +253,47 @@
                      (10 (- - - - - - - - -))))
                     ))
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 (defun byteGame ()
     (cond 
         ((and (eq byte-matSize '8)(eq firstPlayer '0))
@@ -282,13 +322,31 @@
     )
 )
 
+(defun writeInitialState (brdSize player letterList state &optional (n '5))
+    (if (eq player '0)
+        (cond 
+            ((eq brdSize '0) (reverse state))
+            ((not (eq n '0)) 
+                (cond 
+                ((or (eq brdSize '1) (eq brdSize '10))  
+                    (writeInitialState brdSize player letterList (cons (list brdSize '(- - - - - - - - -)) state) (- n 1)))    
+                ((eq (mod brdSize 2) '0)  
+                    (writeInitialState brdSize player letterList (cons '(- - - - - - - - X) state) (- n 1)))
+                            
+                (t (cons '(- - - - - - - - O) byte-state) 
+                    (writeInitialState brdSize player letterList (cons '(- - - - - - - - O) state) (- n 1)))           
+            ))
+            ( (writeInitialState (- brdSize 1) player (cdr letterList) (list (car letterList) state)) (+ n 5))
+        )
+    )
+)   
+
+
 (defun writeBordNumbers (matSize)
     (cond 
         ((> matSize 0) (writeBordNumbers (- matSize 1)) (format t "      ~a  " matSize))
     )
 )
-
-(setq testCounter '1)
 
 (defun printBord (letterList counter initialState)
     (cond 
@@ -380,8 +438,12 @@
 ;;     )
 ;; )
 ;;  (trace drawRow)
-(byteGame)
-;; (print (nth 0 (cadr (caadar byte-state))))
+;; (byteGame)
+(trace writeInitialState)
+  (print (writeInitialState '2 '0 letterList byte-state))
+
+;; (print byte-state)
+
 ;; (print (caar (cdr (assoc '1 byte-state))))
 ;;  (print  (append (list (list '1 (cdar (cdr (assoc '1 (cadar byte-state)))))) (cdadar byte-state)))
 ;;   (print  (list '1 (cdar (cdr (assoc '1 (cadar byte-state))))))
