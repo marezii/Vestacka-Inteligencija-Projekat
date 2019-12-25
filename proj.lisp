@@ -5,7 +5,8 @@
 
 ; ((A 1 (1 (- X X O X X X) )) ))
 
-(setq letterList '((A 1) (B 2) (C 3) (D 4) (E 5) (F 6) (G 7) (H 8) (I 9) (J 10)))
+;; (setq letterList '((A 1) (B 2) (C 3) (D 4) (E 5) (F 6) (G 7) (H 8) (I 9) (J 10)))
+(setq letterList '((J 10) (I 9) (H 8) (G 7) (F 6) (E 5) (D 4) (C 3) (B 2)(A 1)))
 
 (print "Unesite velicinu polja")
 (setq byte-matSize (read))
@@ -322,25 +323,33 @@
     )
 )
 
-(defun writeInitialState (brdSize player letterList state &optional (n '5))
+(defun writeInitialState (brdSize player letterList state &optional (n '5) (m '9) (l '8)) ;;Ako je board size 10 onda je n 5, a ako je 8 onda je 4
     (if (eq player '0)
         (cond 
-            ((eq brdSize '0) (reverse state))
+           ((eq brdSize '0) ())
             ((not (eq n '0)) 
-                (cond 
-                ((or (eq brdSize '1) (eq brdSize '10))  
-                    (writeInitialState brdSize player letterList (cons (list brdSize '(- - - - - - - - -)) state) (- n 1)))    
+                (cond
+                ((eq brdSize '1)
+                    (writeInitialState brdSize player letterList (cons (list m '(- - - - - - - - -)) state) (- n 1) (- m 2)))
+                ((eq brdSize '10)
+                    (writeInitialState brdSize player letterList (cons (list l '(- - - - - - - - -)) state) (- n 1) m (- l 2)))     
                 ((eq (mod brdSize 2) '0)  
-                    (writeInitialState brdSize player letterList (cons '(- - - - - - - - X) state) (- n 1)))
+                    (writeInitialState brdSize player letterList (cons (list l '(- - - - - - - - X)) state) (- n 1) m (- l 2)))
                             
                 (t (cons '(- - - - - - - - O) byte-state) 
-                    (writeInitialState brdSize player letterList (cons '(- - - - - - - - O) state) (- n 1)))           
+                    (writeInitialState brdSize player letterList (cons (list m '(- - - - - - - - O)) state) (- n 1) (- m 2)))           
             ))
-            ( (writeInitialState (- brdSize 1) player (cdr letterList) (list (car letterList) state)) (+ n 5))
+            ((writeInitialState (- brdSize 1) player (cdr letterList)   (cons (car letterList) state)) (+ n 5) (= m 9) (= l 8))
         )
     )
-)   
+)
 
+
+
+;; (
+;; (B 2) (1 (- - - - - - - - -)) (2 (- - - - - - - - -)) (3 (- - - - - - - - -)) (4 (- - - - - - - - -)) (5 (- - - - - - - - -)) 
+;; (A 1) (1 (- - - - - - - - X)) (2 (- - - - - - - - X)) (3 (- - - - - - - - X)) (4 (- - - - - - - - X)) (5 (- - - - - - - - X))
+;; )
 
 (defun writeBordNumbers (matSize)
     (cond 
@@ -440,7 +449,7 @@
 ;;  (trace drawRow)
 ;; (byteGame)
 (trace writeInitialState)
-  (print (writeInitialState '2 '0 letterList byte-state))
+  (print (writeInitialState '10 '0 letterList byte-state))
 
 ;; (print byte-state)
 
@@ -448,3 +457,4 @@
 ;;  (print  (append (list (list '1 (cdar (cdr (assoc '1 (cadar byte-state)))))) (cdadar byte-state)))
 ;;   (print  (list '1 (cdar (cdr (assoc '1 (cadar byte-state))))))
 ;;  (print (car (caadar byte-state)))
+
