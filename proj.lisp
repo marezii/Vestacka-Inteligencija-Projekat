@@ -260,7 +260,9 @@
         ((and (eq byte-matSize '8)(eq firstPlayer '0))
              (writeBordNumbers byte-matSize) 
              (format t "~%")
-             (setq byte-state humanState8) 
+             ;;(setq byte-state humanState8)
+             (writeInitialState byte-matSize firstPlayer letterList byte-state)
+             (print byte-state)
              (printBord letterList counter byte-state))
         ((and (eq byte-matSize '8)(eq firstPlayer '1))
              (writeBordNumbers byte-matSize) 
@@ -285,19 +287,19 @@
 
 (setq tmpBrdSize byte-matSize)
 
-(defun writeInitialState (brdSize player letterList state &optional (n (/ tmpBrdSize 2)) (m '9) (l '8) (help '()) (tmplist '())) ;;Ako je board size 10 onda je n 5, a ako je 8 onda je 4
-    (if (eq player '0)
+(defun writeInitialState (brdSize player letterList state &optional (n (/ tmpBrdSize 2)) (m (- tmpBrdSize 1)) (l tmpBrdSize) (help '()) (tmplist '())) ;;(bordSize = 10 => l = 10 ^ m = 9; bordSize = 8 => l = 8 ^ m = 7)
+    (if (eq player '0)                                                                                                                                 ;;l i m sluze za indeksiranje polja; l za parna, a m za neparna
         (cond 
-           ((eq brdSize '0) (reverse state))
+           ((eq brdSize '0)  (setq byte-state (reverse state)))
             ((not (eq n '0)) 
                 (cond
                 ((eq brdSize '1)
-                    (writeInitialState brdSize player letterList state (- n 1) (- m 2) l (cons (list m '(- - - - - - - - -)) help)))
-                ((eq brdSize '10)
-                    (writeInitialState brdSize player letterList state (- n 1) m (- l 2) (cons (list l '(- - - - - - - - -)) help)))     
+                    (writeInitialState brdSize player letterList state (- n 1) m (- l 2) (cons (list l '(- - - - - - - - -)) help))) ;;Zavrsava se parno uvek
+                ((eq brdSize tmpBrdSize)
+                    (writeInitialState brdSize player letterList state (- n 1) (- m 2) l (cons (list m '(- - - - - - - - -)) help))) ;;Pocinje neparno uvek    
                 ((eq (mod brdSize 2) '0)  
-                    (writeInitialState brdSize player letterList state (- n 1) m (- l 2) (cons (list l '(- - - - - - - - X)) help)))
-                (t (writeInitialState brdSize player letterList state (- n 1) (- m 2) l (cons (list m '(- - - - - - - - O)) help)))           
+                    (writeInitialState brdSize player letterList state (- n 1) (- m 2) l (cons (list m '(- - - - - - - - X)) help)))
+                (t (writeInitialState brdSize player letterList state (- n 1) m (- l 2) (cons (list l '(- - - - - - - - O)) help)))           
             ))
             ((setq tmplist (cons (car letterList) (cons help tmplist)))
             (writeInitialState (- brdSize 1) player (cdr letterList) (cons tmplist state)))
@@ -307,13 +309,13 @@
             ((not (eq n '0)) 
                 (cond
                 ((eq brdSize '1)
-                    (writeInitialState brdSize player letterList state (- n 1) (- m 2) l (cons (list m '(- - - - - - - - -)) help)))
+                    (writeInitialState brdSize player letterList state (- n 1) m (- l 2) (cons (list l '(- - - - - - - - -)) help)))
                 ((eq brdSize tmpBrdSize)
-                    (writeInitialState brdSize player letterList state (- n 1) m (- l 2) (cons (list l '(- - - - - - - - -)) help)))     
+                    (writeInitialState brdSize player letterList state (- n 1) (- m 2) l (cons (list m '(- - - - - - - - -)) help)))     
                 ((eq (mod brdSize 2) '0)  
-                    (writeInitialState brdSize player letterList state (- n 1) m (- l 2) (cons (list l '(- - - - - - - - O)) help)))
+                    (writeInitialState brdSize player letterList state (- n 1) (- m 2) l (cons (list m '(- - - - - - - - O)) help)))
 
-                (t (writeInitialState brdSize player letterList state (- n 1) (- m 2) l (cons (list m '(- - - - - - - - X)) help)))           
+                (t (writeInitialState brdSize player letterList state (- n 1) m (- l 2) (cons (list l '(- - - - - - - - X)) help)))           
             ))
             ((setq tmplist (cons (car letterList) (cons help tmplist)))
             (writeInitialState (- brdSize 1) player (cdr letterList) (cons tmplist state)))
@@ -398,11 +400,12 @@
 ;;     )
 ;; )
 ;;  (trace drawRow)
-;; (byteGame)
-;; (trace writeInitialState)
-  (print (writeInitialState '8 '1 letterList byte-state))
-
+ (byteGame)
 ;; (print byte-state)
+;; (trace writeInitialState)
+;; (print (writeInitialState '8 '0 letterList byte-state))
+
+ ;;(print byte-state)
 
 ;; (print (caar (cdr (assoc '1 byte-state))))
 ;;  (print  (append (list (list '1 (cdar (cdr (assoc '1 (cadar byte-state)))))) (cdadar byte-state)))
