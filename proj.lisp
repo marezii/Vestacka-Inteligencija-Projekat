@@ -4,7 +4,8 @@
 )
 
 (setq letterList '((A 1) (B 2) (C 3) (D 4) (E 5) (F 6) (G 7) (H 8) (I 9) (J 10)))
-
+(setq resultH '())
+(setq resultAI '())
 (print "Unesite velicinu polja")
 (setq byte-matSize (read))
 
@@ -17,21 +18,22 @@
 (setq tmpBrdSize byte-matSize)
 
 (defun byteGame ()
-
+(cond
+    ((and (eq resultH '2)(eq byte-matSize '8)) (print "Vi ste pobednik"))
+    ((and (eq resultAI '3)(eq byte-matSize '10)) (print "Kompijuter je pobednik"))
+)
 (cond 
-(
- (and (or (eq byte-matSize '8) (eq byte-matSize '10)) (or (eq firstPlayer '0) (eq firstPlayer '1)))
+((and (or (eq byte-matSize '8) (eq byte-matSize '10)) (or (eq firstPlayer '0) (eq firstPlayer '1)))
  (writeBordNumbers byte-matSize)
  (format t "~%")
  (writeInitialState byte-matSize firstPlayer letterList byte-state)
  (printBord letterList counter byte-state)
 )
-( (print "Unesite velicinu polja") (setq byte-matSize (read)) 
-  (print "Da li zelite da igrate prvi? 1 za da 0 za ne") (setq firstPlayer (read))
+
+(t (print "Unesite velicinu polja") (setq byte-matSize (read)) (setq tmpBrdSize byte-matSize) (setq counter (* byte-matSize 3))
+  (print "Da li zelite da igrate prvi? 1 za da 0 za ne") (setq firstPlayer (read)) 
   (byteGame)
-)
-)
-)
+)))
 
 (defun writeInitialState (brdSize player letterList state &optional (n (/ tmpBrdSize 2)) (m (- tmpBrdSize 1)) (l tmpBrdSize) (help '()) (tmplist '())) ;;(bordSize = 10 => l = 10 ^ m = 9; bordSize = 8 => l = 8 ^ m = 7)
     (if (eq player '0)                                                                                                                                 ;;l i m sluze za indeksiranje polja; l za parna, a m za neparna
@@ -70,8 +72,19 @@
 )
 
 
+(defun proclaimWinner (status)
+    (cond 
+        ((null status) '())
+        ((eq (cadar (mapcar 'cadr (cadar status))) 'X) (setq resultH (+ 1 result)) 
+                                                       (proclaimWinner (cdr status)))
+        ((eq (cadar (mapcar 'cadr (cadar status))) 'O) (setq resultAI (+ 1 result))
+                                                       (proclaimWinner (cdr status)))
+    )
+)
+
 (defun writeBordNumbers (matSize)
     (cond 
+        ((eq matSize '0) '())
         ((> matSize 0) (writeBordNumbers (- matSize 1)) (format t "      ~a  " matSize))
     )
 )
@@ -131,6 +144,7 @@
          (t  (format t "   ") 
             (drawRow (- cnt 1) letterNo btSize intState (+ n 1) m)) 
     )
-)
- 
- (byteGame)
+) 
+
+(byteGame)
+;; (print (cadar (mapcar 'cadr (cadar (writeInitialState '10 '0 letterList byte-state)))))
