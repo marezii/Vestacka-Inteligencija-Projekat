@@ -1,0 +1,91 @@
+Kad trazi da nema out of bounds i da ne pretrazuje cvor koji ga je pitao
+
+((((A 1) (1(----------))) ()
+
+Njegovi potomci su uvek njegovi isti plus jedan pozadi
+Za neparne isti plus jedan nazad
+Za parne su isti plus jedan gore
+Za gore dve navedene pretpostavimo da cemo koristiti nth funkciju, a poziciju cemo pamtiti u posebnu promenljivu
+Sto se tice kretanja po vrstama, idemo jednu gore, jednu dole, osim ako je prvi i poslednji u nizu.
+
+NE ZABORAVI DA CES MORATI OD SVAKOG NOVOG BYTE-STATE-A DA PRAVIS GRAF
+
+Predjena lista
+
+(B 2) (......)
+(A 1) (......)
+
+Imacu 4 liste
+
+Jedna gleda pethodno preko nth...
+
+Jedna gleda naredno preko nth...
+
+(
+(  cvor - ((A 1) (1(--------))) potomci - ( ((B 2) (2(-------X))) ) )
+(  cvor - ((A 1) (3(--------))) potomci - ( ((B 2) (2(-------X))) ((B 2) (4(-------X))) ) )
+)
+
+Jedna lista ((A 1) (B 2) (C 3) (D 4))... U zavisnosti da li je N = 8 V N = 10
+Druga lista je ostatak byte-state ((1(-------))(3(-------))(5(--------))) koju dobijam u zavisnosti koju vrstu ispitujem
+Treca lista se sastoji od proverenih vrsti
+Cetvrta lista se sastoji od neproverenih vrsti
+
+Kad treba da pocne provera ja uzmem prvi iz neproverene liste
+
+car lista i dobijam ((A 1) ((1(.......))(3(........))))....
+Da bih proveravao drugi element liste ja treba da radim car (cdr trenutnaVrsta) i dobijam ((1(........)) i to sve radim dok trenutnaVrsta nije NIL. Takodje stavim da je neka pomocna promenljiva brojNTH = 0 i inkrementiram ga svaki put kad se uradi prosledi novi element vrste.
+
+Jos bolja ideja stavim brojac da je broj vrsti sa dva (ako je 8 onda je brojac 4) i onda cepam nth od 4 pa nth od 3 pa nth od 2 pa nth od 1... KAKO STAVITI U NOVU LISTU TJ. GRAF?    E sad ide trazenje potomaka.
+Ja uzmem i kazem kad je jedan element vrste i kazem daj mi nth od 4 od neproverene liste i nth od 4 od proverene liste. Ako nema proverena lista onda, ako ima onda super (znaci da je pethodna lista NIL). Kad se zavrsi iteracija od 4 (ili 5) e onda se premesti u provereni tekuca vrsta iz neproverenog se premesta druga i tako idemo sve dok se ne istrosi neproverena lista.
+
+Iz addToGraph se u makeGraph prosledjuje row koji izgleda ovako:
+((A 1) ((1 (- - - - - - - - -)) (3 (- - - - - - - - -)) (5 (- - - - - - - - -)) (7 (- - - - - - - - -))))
+
+(    cvor - ( (A 1) (1 (- - - - - - - - -)) )    )
+append (checkedList pa potomci)
+
+Uzimamo potomke
+(nth n(car (cdr (car uncheckedList )))) za oba
+(nth n+1(car (cdr (car uncheckedList )))) za parne
+(nth n-1(car (cdr (car uncheckedList )))) za neparne
+
+(   cvor - ( (A 1) (1 (- - - - - - - - -)) ) potomci - (  (2 (- - - - - - - - O)) (4 (- - - - - - - - O))  )    )
+
+
+
+(setq help (list (cons letter (list (nth n (car row))))))
+     (append help (list (append (list(nth n(car (cdr (car uncheckedList ))))) (list (nth (+ n 1) (car (cdr (car uncheckedList )))))))) Ovako izgleda dodavanje dece za uncheckedList
+
+(setq help (list (cons letter (list (nth n (car row))))))
+     (append help (list
+                    (append 
+                    (append 
+                        (list (nth n(car (cdr (car uncheckedList ))))) 
+                        (list (nth (+ n 1) (car (cdr (car uncheckedList )))))
+                    )
+                    (append 
+                        (list (nth n(car (cdr (car uncheckedList ))))) 
+                        (list (nth (+ n 1) (car (cdr (car uncheckedList )))))
+                    )
+                    
+                    
+                    )
+                    
+                   )
+     ) dodavanje 4 elementa (max potomaka koliko moze da ima jedan cvor)
+
+(   cvor - ( (A 1) (1 (- - - - - - - - -)) ) potomci - (    (2 (- - - - - - - - O)) (4 (- - - - - - - - O)) (2 (- - - - - - - - O)) (4 (- - - - - - - - O))   )     )
+
+(setq graph (append help graph)) ili pomocni niz
+
+Ako predje onda daje nil sto ne valja i ako udje u -1 ne valja za nth...
+Drugi problem je sto se slovo ne vidi
+
+Posle svega 3 stvari treba da se isprave:
+
+Potomci treba da imaju slovo
+
+(list (append (list (cons checkedLetters (list (nth n  (car (cdr checkedList)))))))) - za checkedList
+
+(list (append (list (cons (car (cdr letter)) (list (nth n (car (cdr (car uncheckedList))))))))) - za uncheckedList

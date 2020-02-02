@@ -1,0 +1,38 @@
+(member 'X '(-------X)) da li clan pripada listi, vraca element ako postoji, vraca listu odakle se pojavljuje prvi element ako je nadjen
+(print (position 'X '(- - - X O O O O X))) vraca najblizu lokaciju
+
+(print (position 'X '(- - - - X X X O))) -> 4 (Broji od nule)
+(print (member 'X '(- - - - X X X O))) -> (X X X O)
+
+(print (nth 0 (reverse graph))) - mora da uradimo reverse od grafa kako bih mogao od prvog elementa da pretrazujem graf. (((A 1) (1 (- - - - - - - - -))) (((B 2) (2 (- - - - - - - - O)))))
+
+
+
+numberp vraca T ako je objekad tipa broj
+
+Ako cvor na koji se pomeramo ima najmanju dubinu (i ostali uslovi da su izvrseni) onda moze da se izvede pomeranje.
+
+Primer nadjiDubinu (graf (A 3) (B 2) 3) Cvor1, Cvor2, Visina sa koje se sece stack
+Ako postoji i ima neki stack na sebi, onda mora da proverim sa visinom sa koje se sece da li to moze (ako ne, onda ponovo potez), a ako je prazan onda mora da pogledam za svu njegovu decu koja je dubina i na primer da vratim listu koja sadrzi udaljenosti (((B 2) 3) ((B 4) 5)) i iz ovog da prodje kroz celu listu i da vrati element(e) na koje moze da se krece. Ako je moguce da se pokrene na zeljeni, onda se izvrsi lomljenje tj. posto je prazan samo stekovi zamene mesta, ako ne vraca se gde moze da se pomera.
+
+
+
+Ovde mozemo da proverimo da li uopste on moze da ga pomeri (tj. da li ima dete (B 2))
+
+
+                         A se izvlaci iz (car element), a 1 se izvlaci iz pa cackamo pocetne cvorove dok ga ne nadjemo... Tipa if (car (cdr (car (car graph)))) je = 1 i tipa ako je
+
+(cond
+(Da li pozicija na koju hocu da idem je prazna) - Ako jeste onda ide novi cond gde se pita da li je na dnu stack-a igraceva figura. Ako jeste onda se proverava da li uopste su polja susedi, ako jesu onda se proverava dubina (udaljenost od prvog polje sa stack-om) i onda se pita ako je udaljenost za to polje najmanja onda liste bukvalno zamene mesta. U bilo kom else slucaju se vraca poruka sa greskom i onda se trazi novi unos i pokrece se potez. Posle odigranom poteza se proverava da li je stack na koji smo pomerali figuru pun i ako jeste dodaje za broj igracu na ciji je element poslednji, sklanjaju se elementi sa tog stacka i izvrsi se stampanje table i izvrsi se provera da li je neko pobedio.
+Ako se u bilo kom slucaju odigra potez, promeni se promenljiva za igraca koji igra. Tipa unese se X ili O za trenutnog igraca i on moze samo te figure da pomera. I odmah se nadogradi byte-state i Pokrece se opet fja za potez.
+Else ako je stack na koji se krecem ima figure, onda se ispituje da li su susedi Ako jesu susedi, proverava se visina, da li mogu da isecem stack, ako moze, onda se sece i igra potez, a ako ne moze, onda se trazi novi unos poteza, ako nisu pita se gde mogu da pokrenem figuru. Posle odigranom poteza se proverava da li je stack na koji smo pomerali figuru pun i ako jeste dodaje za broj igracu na ciji je element poslednji, sklanja se sa punog stacka figure i stampa se tabla i izvrsi se provera da li je neko pobedio. I odmah se nadogradi byte-state 
+
+)
+
+(((A 1) (3 (- - - - - - - - -))) ((((B 2) (4 (- - - - - - - - O)))) (((B 2) (2 (- - - - - - - - O))))))
+(- - - - - - - - -) - (print  (car (cdr (car (cdr (car (car (cdr graph))))))))
+
+(print  (position currentPlayer (car (cdr (car (cdr (car (car (cdr graph)))))))))
+Vraca NIL ako ne postoji (sto je ok za mene), a ako postoji vraca niz odakle pocinje 
+
+(print (member 'X '(- - - - X X X O))) -> (X X X O)
